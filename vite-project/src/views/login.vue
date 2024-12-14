@@ -1,49 +1,78 @@
 <template>
   <div class="login">
-    <el-form class="login-form">
-      <h3 class="title">若依后端管理系统</h3>
-      <i class="el-icon-upload"></i>
-      <el-form-item>
-        <el-input size="large" placeholder="账号">
+    <el-form class="login-form" :rules="loginRules" :model="loginForm">
+      <h3 class="title">后端管理系统</h3>
+      <el-form-item prop="phonenumber">
+        <el-input v-model="loginForm.phonenumber" size="large" placeholder="手机号">
           <template #prefix>
             <el-icon :size="15">
-              <User/>
+              <user/>
             </el-icon>
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item>
-        <el-input size="large" placeholder="密码">
+      <el-form-item prop="password">
+        <el-input v-model="loginForm.password" size="large" placeholder="密码" type="password">
           <template #prefix>
             <el-icon :size="15">
-              <Lock/>
+              <lock/>
             </el-icon>
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item>
-        <el-input size="large" placeholder="验证码" style="width: 60%">
+      <el-form-item prop="code">
+        <el-input v-model="loginForm.code" size="large" placeholder="验证码" style="width: 60%">
           <template #prefix>
             <el-icon :size="15">
-              <Check/>
+              <warning/>
             </el-icon>
           </template>
         </el-input>
-        <div class="login-code">图片</div>
+        <div class="login-code">
+          <img :src="codeUrl" class="login-code-image" @click="getCode">
+        </div>
       </el-form-item>
-      <el-checkbox style="margin: 0 0 20px 0">记住密码</el-checkbox>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin: 0 0 20px 0">记住密码</el-checkbox>
       <el-form-item>
-        <el-button style="width: 100% " type="primary" size="large">登 录</el-button>
+        <el-button style="width: 100% " type="primary" size="large" @click="loginHandle">登 录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 
-<script>
-export default {
-  name: "login"
+<script setup>
+import {ref} from 'vue'
+import {getCodeImg} from "@/api/login.js";
+
+const codeUrl = ref('')
+
+const loginForm = ref({
+  phonenumber: '18751889883',
+  password: '18751889883',
+  rememberMe: false,
+  code: '',
+  uuid: ''
+})
+
+const loginRules = {
+  phonenumber: [{required: true, triggr: 'blur', message: '请输入手机号'}],
+  password: [{required: true, triggr: 'blur', message: '请输入密码'}],
+  code: [{required: true, triggr: 'change', message: '请输入验证码'}]
 }
+
+function loginHandle() {
+  console.log('loginHandle', loginForm.value)
+}
+
+function getCode() {
+  getCodeImg().then(res => {
+    console.log(res)
+    codeUrl.value = "data:image/gif;base64," + res.data.img;
+  })
+}
+
+getCode()
 </script>
 
 
@@ -72,9 +101,16 @@ export default {
   .login-code {
     width: 35%;
     margin: 0 0 0 15px;
-    background-color: yellowgreen;
+    //background-color: yellowgreen;
     text-align: center;
     border-radius: 5px;
+    height: 40px;
+
+    .login-code-image {
+      height: 40px;
+      //padding-left: 5px;
+      cursor: pointer;
+    }
   }
 }
 </style>
