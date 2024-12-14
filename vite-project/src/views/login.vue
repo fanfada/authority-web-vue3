@@ -73,7 +73,7 @@ function loginHandle() {
       useStore.login(loginForm.value).then(res => {
         console.log(useStore.token)
         if (res.state !== "OK") {
-          ElMessage.error(res.data.errorMessage)
+          ElMessage.error(res.errorMessage)
         }
       }).catch(error => {
         console.error("Login request failed", error);
@@ -86,8 +86,8 @@ function loginHandle() {
 function getCode() {
   getCodeImg().then(res => {
     console.log(res)
-    codeUrl.value = "data:image/gif;base64," + res.data.img;
-    loginForm.value.uuid = res.data.uuid
+    codeUrl.value = "data:image/gif;base64," + res.img;
+    loginForm.value.uuid = res.uuid
   })
 }
 

@@ -5,4 +5,7 @@ const service = axios.create({
     // baseURL: 'http://60.204.236.211:8080/api'
 })
 
+service.interceptors.response.use( res =>{
+    return res.data
+})
 export default service
