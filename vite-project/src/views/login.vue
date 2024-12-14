@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-form class="login-form" :rules="loginRules" :model="loginForm">
+    <el-form ref="loginRef" class="login-form" :rules="loginRules" :model="loginForm">
       <h3 class="title">后端管理系统</h3>
       <el-form-item prop="phonenumber">
         <el-input v-model="loginForm.phonenumber" size="large" placeholder="手机号">
@@ -42,9 +42,11 @@
 
 
 <script setup>
-import {ref} from 'vue'
-import {getCodeImg} from "@/api/login.js";
+import {ref, getCurrentInstance} from 'vue'
+import {getCodeImg, login} from "@/api/login.js";
+import {ElMessage} from "element-plus";
 
+const {proxy} = getCurrentInstance()
 const codeUrl = ref('')
 
 const loginForm = ref({
@@ -63,12 +65,30 @@ const loginRules = {
 
 function loginHandle() {
   console.log('loginHandle', loginForm.value)
+  proxy.$refs.loginRef.validate(valid => {
+    console.log('valid', valid)
+    if (valid) {
+      login(loginForm.value.phonenumber, loginForm.value.password, loginForm.value.code, loginForm.value.uuid)
+          .then(res => {
+            console.log(res)
+            if (res.state !== "OK") {
+              ElMessage.error(res.data.errorMessage);
+              getCode()
+            }
+          })
+          .catch(error => {
+            console.error("Login request failed", error);
+            ElMessage.error("登录请求失败，请稍后重试！");
+          });
+    }
+  })
 }
 
 function getCode() {
   getCodeImg().then(res => {
     console.log(res)
     codeUrl.value = "data:image/gif;base64," + res.data.img;
+    loginForm.value.uuid = res.data.uuid
   })
 }
 

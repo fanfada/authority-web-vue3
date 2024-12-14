@@ -7,3 +7,17 @@ export function getCodeImg() {
         method: 'get'
     })
 }
+
+export function login(phonenumber, password, code, uuid) {
+    const data = {
+        phonenumber,
+        password,
+        code,
+        uuid
+    }
+    return request({
+        url: '/login/login',
+        method: 'post',
+        data: data
+    })
+}
