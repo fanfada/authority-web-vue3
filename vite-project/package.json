@@ -1,0 +1,22 @@
+{
+  "name": "authority-web-vue3",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "4.1.4",
+    "element-plus": "2.2.27",
+    "@element-plus/icons-vue": "2.0.10"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.1",
+    "sass": "1.56.1"
+  }
+}
