@@ -43,13 +43,13 @@
 
 <script setup>
 import {ref, getCurrentInstance} from 'vue'
-import {getCodeImg, login} from "@/api/login.js";
+import {getCodeImg} from "@/api/login.js";
 import {ElMessage} from "element-plus";
 import useUserStore from "@/store/modules/user.js";
 
 const {proxy} = getCurrentInstance()
 const codeUrl = ref('')
-const useUser = useUserStore()
+const useStore = useUserStore()
 
 const loginForm = ref({
   phonenumber: '18751889883',
@@ -66,22 +66,19 @@ const loginRules = {
 }
 
 function loginHandle() {
-  console.log(useUser.token)
   console.log('loginHandle', loginForm.value)
   proxy.$refs.loginRef.validate(valid => {
     console.log('valid', valid)
     if (valid) {
-      login(loginForm.value.phonenumber, loginForm.value.password, loginForm.value.code, loginForm.value.uuid)
-          .then(res => {
-            console.log(res)
-            if (res.state !== "OK") {
-              ElMessage.error(res.data.errorMessage)
-            }
-          })
-          .catch(error => {
-            console.error("Login request failed", error);
-            ElMessage.error("登录请求失败，请稍后重试！");
-          });
+      useStore.login(loginForm.value).then(res => {
+        console.log(useStore.token)
+        if (res.state !== "OK") {
+          ElMessage.error(res.data.errorMessage)
+        }
+      }).catch(error => {
+        console.error("Login request failed", error);
+        ElMessage.error("登录请求失败，请稍后重试！");
+      })
     }
   })
 }
