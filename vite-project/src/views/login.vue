@@ -4,13 +4,31 @@
       <h3 class="title">若依后端管理系统</h3>
       <i class="el-icon-upload"></i>
       <el-form-item>
-        <el-input size="large" icon="el-icon-upload" placeholder="账号"></el-input>
+        <el-input size="large" placeholder="账号">
+          <template #prefix>
+            <el-icon :size="15">
+              <User/>
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item>
-        <el-input size="large" placeholder="密码"></el-input>
+        <el-input size="large" placeholder="密码">
+          <template #prefix>
+            <el-icon :size="15">
+              <Lock/>
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item>
-        <el-input size="large" placeholder="验证码" style="width: 60%"></el-input>
+        <el-input size="large" placeholder="验证码" style="width: 60%">
+          <template #prefix>
+            <el-icon :size="15">
+              <Check/>
+            </el-icon>
+          </template>
+        </el-input>
         <div class="login-code">图片</div>
       </el-form-item>
       <el-checkbox style="margin: 0 0 20px 0">记住密码</el-checkbox>
@@ -51,7 +69,7 @@ export default {
     margin: 0 auto 30px auto;
   }
 
-  .login-code{
+  .login-code {
     width: 35%;
     margin: 0 0 0 15px;
     background-color: yellowgreen;
