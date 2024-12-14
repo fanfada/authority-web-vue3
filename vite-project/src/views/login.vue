@@ -45,9 +45,11 @@
 import {ref, getCurrentInstance} from 'vue'
 import {getCodeImg, login} from "@/api/login.js";
 import {ElMessage} from "element-plus";
+import useUserStore from "@/store/modules/user.js";
 
 const {proxy} = getCurrentInstance()
 const codeUrl = ref('')
+const useUser = useUserStore()
 
 const loginForm = ref({
   phonenumber: '18751889883',
@@ -64,6 +66,7 @@ const loginRules = {
 }
 
 function loginHandle() {
+  console.log(useUser.token)
   console.log('loginHandle', loginForm.value)
   proxy.$refs.loginRef.validate(valid => {
     console.log('valid', valid)
@@ -72,8 +75,7 @@ function loginHandle() {
           .then(res => {
             console.log(res)
             if (res.state !== "OK") {
-              ElMessage.error(res.data.errorMessage);
-              getCode()
+              ElMessage.error(res.data.errorMessage)
             }
           })
           .catch(error => {
