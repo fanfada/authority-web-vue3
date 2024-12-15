@@ -1,13 +1,13 @@
 import {defineStore} from "pinia";
 import {login} from "@/api/login.js";
-import {ElMessage} from "element-plus";
+import {getToken, setToken} from "@/utils/auth.js";
 
 const useUserStore = defineStore(
     'user',
     {
         state: () => {
             return {
-                token: ''
+                token: getToken()
             }
         },
         actions: {
@@ -21,12 +21,11 @@ const useUserStore = defineStore(
                     login(phonenumber, password, code, uuid)
                         .then(res => {
                             resolve(res)
-                            console.log(res)
-                            this.token = res.data.body.token
-
+                            setToken(res.body.token)
+                            this.token = res.body.token
                         }).catch(err => {
-                            reject(err)
-                        })
+                        reject(err)
+                    })
                 })
 
             }

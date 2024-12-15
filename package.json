@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "vite-plugin-components": "^0.13.3"
+  }
+}

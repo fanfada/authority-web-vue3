@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [
         vue(),
         autoImport({
-            imports: ['vue']
+            imports: ['vue', 'pinia', 'vue-router']
         })
     ],
     resolve: {

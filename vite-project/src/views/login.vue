@@ -42,14 +42,18 @@
 
 
 <script setup>
-import {ref, getCurrentInstance} from 'vue'
+import {ref, getCurrentInstance, watch} from 'vue'
 import {getCodeImg} from "@/api/login.js";
 import {ElMessage} from "element-plus";
 import useUserStore from "@/store/modules/user.js";
+import {useRoute, useRouter} from "vue-router";
 
+const router = useRouter()
+const route = useRoute()
 const {proxy} = getCurrentInstance()
 const codeUrl = ref('')
 const useStore = useUserStore()
+const redirect = ref(undefined)
 
 const loginForm = ref({
   phonenumber: '18751889883',
@@ -59,6 +63,11 @@ const loginForm = ref({
   uuid: ''
 })
 
+watch(route, newRoute => {
+  redirect.value = newRoute.query && newRoute.query.redirect
+  // console.log(newRoute)
+}, {immediate: true});
+
 const loginRules = {
   phonenumber: [{required: true, triggr: 'blur', message: '请输入手机号'}],
   password: [{required: true, triggr: 'blur', message: '请输入密码'}],
@@ -66,18 +75,22 @@ const loginRules = {
 }
 
 function loginHandle() {
-  console.log('loginHandle', loginForm.value)
+  // console.log('loginHandle', loginForm.value)
   proxy.$refs.loginRef.validate(valid => {
-    console.log('valid', valid)
+    // console.log('valid', valid)
     if (valid) {
       useStore.login(loginForm.value).then(res => {
-        console.log(useStore.token)
+        // console.log(useStore.token)
         if (res.state !== "OK") {
           ElMessage.error(res.errorMessage)
+          getCode()
+        } else {
+          router.push(redirect.value || "/layout")
         }
       }).catch(error => {
         console.error("Login request failed", error);
-        ElMessage.error("登录请求失败，请稍后重试！");
+        ElMessage.error("请求失败，请稍后重试！");
+        getCode()
       })
     }
   })
@@ -85,9 +98,11 @@ function loginHandle() {
 
 function getCode() {
   getCodeImg().then(res => {
-    console.log(res)
-    codeUrl.value = "data:image/gif;base64," + res.img;
+    // console.log(res)
+    codeUrl.value = "data:image/gif;base64," + res.body.img;
     loginForm.value.uuid = res.uuid
+  }).catch((err) => {
+    console.log(err)
   })
 }
 
